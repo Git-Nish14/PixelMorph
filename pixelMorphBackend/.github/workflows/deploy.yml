@@ -1,0 +1,30 @@
+name: CI/CD to EC2
+
+on:
+  push:
+    branches: [ main ]  # trigger deployment on pushes to main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@YOUR_EC2_PUBLIC_IP "\
+          cd /home/ubuntu/PixelMorph/pixelMorphBackend && \
+          git reset --hard && git pull origin main && \
+          source venv/bin/activate && \
+          pip install -r requirements.txt && \
+          pkill -f 'uvicorn main:app' || true && \
+          nohup uvicorn main:app --host 0.0.0.0 --port 8000 &"
+
