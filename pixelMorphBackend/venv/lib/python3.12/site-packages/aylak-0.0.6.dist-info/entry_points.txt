@@ -1,0 +1,4 @@
+[console_scripts]
+aylak = aylak.__main__:main
+pyrogram = aylak.telegram.pyrogram:string
+telethon = aylak.telegram.telethon:string
