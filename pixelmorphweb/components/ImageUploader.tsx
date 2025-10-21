@@ -3,6 +3,7 @@
 import { useState, ChangeEvent, useRef } from "react";
 import { EffectSelector } from "./EffectSelector";
 import { processImage } from "../lib/processImage";
+import Image from "next/image";
 
 export default function ImageUploader() {
   const [file, setFile] = useState<File | null>(null);
@@ -151,7 +152,7 @@ export default function ImageUploader() {
                 </button>
               </div>
               <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a] border border-[#3d3d3d]">
-                <img src={preview} alt="Original" className="w-full h-auto" />
+                <Image src={preview} alt="Original" className="w-full h-auto" />
               </div>
             </div>
 
