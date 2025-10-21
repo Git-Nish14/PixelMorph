@@ -9,15 +9,25 @@ export async function processImage(
 
   try {
     const response = await axios.post(
-      `http://18.117.133.97:8000/process-image/${effect}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/process-image/${effect}`, // use your deployed backend
       formData,
       { responseType: "blob" }
     );
 
     const blob = new Blob([response.data]);
     return URL.createObjectURL(blob);
-  } catch (error) {
-    console.error("Image processing failed:", error);
-    throw new Error("Processing failed");
+  } catch (error: any) {
+    // Log full error details to the console
+    console.error("Image processing failed:");
+    if (error.response) {
+      console.error("Response data:", error.response.data);
+      console.error("Status:", error.response.status);
+      console.error("Headers:", error.response.headers);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error message:", error.message);
+    }
+    throw new Error("Processing failed. Check console for details.");
   }
 }
